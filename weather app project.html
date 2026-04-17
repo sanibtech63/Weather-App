@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather App</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #12c6f3;
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            margin-top: 100px;
+        }
+
+        input {
+            padding: 10px;
+            width: 200px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: #fff;
+            color: #333;
+        }
+
+        #weatherResult {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>🌤 Weather App</h1>
+
+    <input type="text" id="cityInput" placeholder="Enter city name">
+    <button onclick="getWeather()">Search</button>
+
+    <div id="weatherResult"></div>
+</div>
+
+<script>
+    const apiKey = "b510b105dc6d30eabf16d5bfd089aa36";
+
+    async function getWeather() {
+        const city = document.getElementById("cityInput").value;
+
+        if (city === "") return;
+
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.cod != 200) {
+                document.getElementById("weatherResult").innerHTML = "City not found ❌";
+                return;
+            }
+
+            document.getElementById("weatherResult").innerHTML = `
+                <h2>${data.name}</h2>
+                <p>🌡 Temperature: ${data.main.temp}°C</p>
+                <p>🌥 Weather: ${data.weather[0].main}</p>
+                <p>💧 Humidity: ${data.main.humidity}%</p>
+            `;
+        } catch (error) {
+            document.getElementById("weatherResult").innerHTML = "Error fetching data ❌";
+        }
+    }
+</script>
+     
+
+</body>
+</html>
